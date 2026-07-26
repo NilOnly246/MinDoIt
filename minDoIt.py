@@ -1,7 +1,12 @@
 import curses
+import json
 
-def draw_menu(stdscr):
+toggleKeys = [43,32]
+
+def draw_menu(stdscr): 
+    value = 0
     k = 0
+    lastK = 0
     cursor_x = 0
     cursor_y = 0
 
@@ -21,8 +26,11 @@ def draw_menu(stdscr):
         # Initialization
         stdscr.clear()
         height, width = stdscr.getmaxyx()
-
-        if k == curses.KEY_DOWN:
+        if k == 43:
+            value += 1
+        elif k == 32:
+            value += 10
+        elif k == curses.KEY_DOWN:
             cursor_y = cursor_y + 1
         elif k == curses.KEY_UP:
             cursor_y = cursor_y - 1
@@ -38,7 +46,7 @@ def draw_menu(stdscr):
         cursor_y = min(height-1, cursor_y)
 
         # Declaration of strings
-        title = "MinDoIt"[:width-1]
+        title = f"{k} - MinDoIt {value}"[:width-1]
 
         # Turning on attributes for title
         stdscr.attron(curses.color_pair(2))
@@ -55,7 +63,8 @@ def draw_menu(stdscr):
 
         # Refresh the screen
         stdscr.refresh()
-
+        
+        lastK = k
         # Wait for next input
         k = stdscr.getch()
 
